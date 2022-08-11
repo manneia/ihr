@@ -29,12 +29,24 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  // 本地开发的服务配置
   devServer: {
     port: port,
     open: true,
     overlay: {
       warnings: false,
       errors: true
+    },
+    proxy: {
+      // 属性 请求路径中的特殊标志 baseUrl
+      '/api': {
+        target: 'http://ihrm-java.itheima.net/', // 目标服务器的地址
+        changeOrigin: true // 表示是否跨域 true 可以
+        // pathRewrite 选填 一定要和后端的真实请求路径对齐
+        // pathRewrite: {
+        //   '^/api': '/api'
+        // }
+      }
     }
   },
   configureWebpack: {

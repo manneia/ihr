@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
 
 // create an axios instance 单例模式
 const service = axios.create({
@@ -11,6 +12,21 @@ const service = axios.create({
 service.interceptors.request.use()
 
 // response interceptor
-service.interceptors.response.use()
+// 两个参数都写上
+// 失败 处理逻辑 消息提示 返回 Promise.reject()
+// 成功 直接返回
+service.interceptors.response.use(response => {
+  const { data, success, message } = response.data
+  // success true表示成功  false表示失败
+  if (success) {
+    return data
+  } else {
+    Message.error(message)
+    return Promise.reject(new Error(message))
+  }
+}, error => {
+  Message.error(error.message)
+  return Promise.reject(error)
+})
 
 export default service
