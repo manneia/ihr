@@ -6,8 +6,8 @@ export const imageError = {
   inserted: function(dom, options) {
     // dom onerror 事件
     // options.value 指的是指令绑定的值
-    dom.onerror = function() {
-      dom.src = options.value
+    if (dom.src) {
+      dom.setAttribute('src', options.value)
     }
   }
 }
