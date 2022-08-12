@@ -1,8 +1,10 @@
 <template>
   <div :class="{'has-logo':showLogo}">
+	<!-- 左侧logo -->
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu
+      <!-- 导航菜单 -->
+			<el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
@@ -12,6 +14,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
+			<!-- 组件  传递一级路由-->
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>

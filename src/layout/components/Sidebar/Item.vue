@@ -1,4 +1,7 @@
 <script>
+// 函数式组件 函数式编程 没有data 没有this
+// render 返回虚拟dom
+// render 更高效 template 经过compile 转为 render 
 export default {
   name: 'MenuItem',
   functional: true,

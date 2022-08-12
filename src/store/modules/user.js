@@ -1,5 +1,5 @@
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
-import { getToken, removeToken, setToken } from '@/utils/auth'
+import { getToken, removeToken, setTimeStamp, setToken } from '@/utils/auth'
 
 // vuex 不能持久化 token 绝大部分放在cookie中 实现持久化
 const state = {
@@ -35,6 +35,8 @@ const actions = {
     // 调用接口
     const token = await login(data)
     context.commit('SET_TOKEN', token)
+    // 登录成功一瞬间,记录现在的时间戳
+    setTimeStamp()
   },
   async getUserInfo(context) {
     const userInfo = await getUserInfo()
