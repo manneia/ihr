@@ -12,7 +12,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="staffPhoto || defaultImg" class="user-avatar">
+          <img v-imageError="defaultImg" :src="staffPhoto" class="user-avatar">
           <span class="name">{{ username }}</span>
           <i class="el-icon-caret-bottom" style="color: #fff" />
         </div>
