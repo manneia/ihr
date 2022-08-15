@@ -8,7 +8,7 @@
           <TreeTools slot-scope="{ data }" style="width: 100%" :tree-node="data" @command="handlerCommand" />
         </el-tree>
       </el-card>
-      <addDepartment :visible="visible" />
+      <addDepartment ref="addDepart" :visible="visible" :tree-node="activeNode" @close="visible = false" @refresh="getDepartments()" />
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
         label: 'name'
       },
       activeNode: {}, // 记录当前操作的节点
-      visible: true // 控制弹窗的显示
+      visible: false // 控制弹窗的显示
     }
   },
   created() {
@@ -40,7 +40,7 @@ export default {
       this.company = { name: res.companyName, manager: '负责人' }
       this.treeNode = tranListToTreeData(res.depts, '')
     },
-    handlerCommand(command, node) {
+    async handlerCommand(command, node) {
       // 记录当前操作的数据
       this.activeNode = { ...node }
       if (command === 'del') {
@@ -60,9 +60,17 @@ export default {
           })
         })
       } else if (command === 'add') {
-        console.log('add')
+        // activeNode 父节点
+        this.visible = true
       } else if (command === 'edit') {
-        console.log('update')
+        // activeNode 当前节点
+        // 错误的抛出也是遵循冒泡的,所以在上层直接抓取错误
+        try {
+          await this.$refs.addDepart.getDepartDetail(this.activeNode.id)
+          this.visible = true
+        } catch (error) {
+          this.$message.error('获取部门详情失败,请重新获取')
+        }
       }
     }
   }

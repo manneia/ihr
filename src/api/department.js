@@ -36,3 +36,12 @@ export const addDepartment = data => service({
   method: 'POST',
   data
 })
+
+/**
+ *  @description {string} 根据id获取部门详情
+ * @param {number} id
+ * @returns
+ */
+export const getDepartDetail = id => service({
+  url: `/company/department/${id}`
+})
