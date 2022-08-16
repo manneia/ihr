@@ -28,7 +28,7 @@ export default {
         label: 'name'
       },
       activeNode: {}, // 记录当前操作的节点
-      visible: true // 控制弹窗的显示
+      visible: false // 控制弹窗的显示
     }
   },
   created() {
