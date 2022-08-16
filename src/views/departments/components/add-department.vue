@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible="visible" @close="handlerCancel">
+  <el-dialog title="新增部门" :visible="visible" @close="handleCancel">
     <el-form ref="departForm" :model="departForm" :rules="rules">
       <el-form-item label="部门名称" prop="name" label-width="120px">
         <el-input v-model="departForm.name" style="width: 80%" />
@@ -17,7 +17,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer">
-      <el-button @click="handlerCancel">取 消</el-button>
+      <el-button @click="handleCancel">取 消</el-button>
       <el-button type="primary" @click="handleSubmit">确 定</el-button>
     </div>
   </el-dialog>
@@ -39,17 +39,21 @@ export default {
   },
   data() {
     const validName = async(rule, value, callback) => {
-      const departs = await getDepartments()
-      if (this.departForm.id) {
+      try {
+        const departs = await getDepartments()
+        if (this.departForm.id) {
         // 过滤自身 编辑场景下,treeNode是当前节点 departForm等价
-        const result = departs.depts.filter(item => item.id !== this.departForm.id)
-        // 第二步,找兄弟节点, 编辑时treeNode是当前节点 pid只能是treeNode.pid
-        const res = result.filter(item => item.pid === this.treeNode.pid)
-        res.find(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
-      } else {
+          const result = departs.depts.filter(item => item.id !== this.departForm.id)
+          // 第二步,找兄弟节点, 编辑时treeNode是当前节点 pid只能是treeNode.pid
+          const res = result.filter(item => item.pid === this.treeNode.pid)
+          res.find(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
+        } else {
         // 新增时treeNode是父节点 departForm是新增的子节点
-        const res = departs.depts.filter(item => item.pid === this.treeNode.id)
-        res.find(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
+          const res = departs.depts.filter(item => item.pid === this.treeNode.id)
+          res.find(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
+        }
+      } catch (error) {
+        this.$message.error('获取部门详情失败,请重新校验')
       }
     }
     const validCode = async(rule, value, callback) => {
@@ -119,7 +123,7 @@ export default {
         // 消息提示
         this.$message.success('操作成功')
         // 关闭弹窗
-        this.$emit('close')
+        this.$emit('update:visible', false)
         // 刷新
         this.$emit('refresh')
       } catch (error) {
@@ -137,7 +141,7 @@ export default {
       // 清空表单
       this.$refs.departForm.resetFields()
       // 关闭弹窗
-      this.$emit('close')
+      this.$emit('update:visible', false)
     },
     // 根据id获取员工详情
     async getDepartDetail(id) {
@@ -147,3 +151,4 @@ export default {
   }
 }
 </script>
+

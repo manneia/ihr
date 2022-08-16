@@ -2,13 +2,14 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card>
-        <TreeTools :tree-node="company" :is-root="true" />
+        <TreeTools :tree-node="company" is-root @command="handlerCommand" />
         <el-tree :data="treeNode" :props="defaultProps" :expand-on-click-node="false" default-expand-all>
           <!-- 有多少个节点就渲染多少次 -->
           <TreeTools slot-scope="{ data }" style="width: 100%" :tree-node="data" @command="handlerCommand" />
         </el-tree>
       </el-card>
-      <addDepartment ref="addDepart" :visible="visible" :tree-node="activeNode" @close="visible = false" @refresh="getDepartments()" />
+      <!-- 父组件写上 .sync修饰符 子组件写update:[控制显示隐藏的属性] -->
+      <addDepartment ref="addDepart" :visible.sync="visible" :tree-node="activeNode" @refresh="getDepartments" />
     </div>
   </div>
 </template>
@@ -23,7 +24,11 @@ export default {
   data() {
     return {
       treeNode: [],
-      company: {},
+      company: {
+        name: '江苏传智播客教育科技股份有限公司 ',
+        manager: '负责人',
+        id: ''
+      },
       defaultProps: {
         label: 'name'
       },
@@ -37,7 +42,6 @@ export default {
   methods: {
     async getDepartments() {
       const res = await getDepartments()
-      this.company = { name: res.companyName, manager: '负责人' }
       this.treeNode = tranListToTreeData(res.depts, '')
     },
     async handlerCommand(command, node) {
