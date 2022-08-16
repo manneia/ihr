@@ -9,7 +9,21 @@ export const login = (data) => service({
   method: 'post',
   data
 })
-
-export const getInfo = (token) => service({ })
-
+/**
+ * @description {string} 获取用户信息对象
+ * @param {*} token
+ * @returns {object} userInfo
+ */
+export const getUserInfo = (token) => service({
+  url: '/sys/profile',
+  method: 'POST'
+})
+/**
+ * @description {string} 员工基本信息
+ * @param {number} id
+ * @returns {object} userInfo
+ */
+export const getUserDetailById = (id) => service({
+  url: `/sys/user/${id}`
+})
 export const logout = () => service({})

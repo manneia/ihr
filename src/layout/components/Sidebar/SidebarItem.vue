@@ -1,5 +1,7 @@
 <template>
+<!-- 一级路由 hidden 为false才能显示,为true不显示 -->
   <div v-if="!item.hidden">
+	<!-- children为一个或没有 -->
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
@@ -8,7 +10,8 @@
       </app-link>
     </template>
 
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+		<!--children为两个或者两个以上  -->
+    <!-- <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
@@ -20,7 +23,7 @@
         :base-path="resolvePath(child.path)"
         class="nest-menu"
       />
-    </el-submenu>
+    </el-submenu> -->
   </div>
 </template>
 
@@ -52,14 +55,17 @@ export default {
   },
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
+   //  TODO: refactor with render function
     this.onlyOneChild = null
     return {}
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
+			// showingChildren 数组
+			// filter 返回false 会被过滤   返回true 才会被保留
       const showingChildren = children.filter(item => {
         if (item.hidden) {
+					// 过滤掉了  
           return false
         } else {
           // Temp set(will be used if only has one showing child)
