@@ -22,7 +22,7 @@
       <el-form-item label="部门" prop="departmentName">
         <el-input v-model="EmployeesForm.departmentName" style="width: 50%" placeholder="请选择部门" @focus="getDepartments" />
         <!-- 放置一个tree组件 -->
-        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{ label: 'name' }" @node-click="selectNode" />
+        <el-tree v-if="showTree" v-loading="loading" :data="treeData" default-expand-all :props="{ label: 'name' }" @node-click="selectNode" />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="EmployeesForm.correctionTime" type="date" style="width: 50%" picker-options="选择日期" />
@@ -107,6 +107,7 @@ export default {
       }
       // 清空表单
       this.$refs.Form.resetFields()
+      this.showTree = false
       // 关闭弹窗
       this.$emit('update:visible', false)
     },
@@ -119,7 +120,6 @@ export default {
       this.loading = false
     },
     selectNode(node) {
-      console.log(node)
       this.EmployeesForm.departmentName = node.name
       this.showTree = false
     },
@@ -127,8 +127,7 @@ export default {
       // 表单校验
       await this.$refs.Form.validate()
       // 调用接口
-      const res = await addEmployee(this.EmployeesForm)
-      console.log(res)
+      await addEmployee(this.EmployeesForm)
       // 消息提示
       this.$message.success('新增员工成功')
       // 关闭弹窗
@@ -139,5 +138,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

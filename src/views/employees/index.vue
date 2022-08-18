@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <PageTools :show-before="true">
-        <span slot="before">共{{ page.total }}条记录</span>
+      <PageTools show-before>
+        <span slot="before">共{{ total }}条记录</span>
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
@@ -15,7 +15,11 @@
           <el-table-column label="序号" type="index" :index="indexMethod" fixed width="80" />
           <el-table-column fit label="姓名" prop="username" sortable />
           <el-table-column fit label="工号" prop="workNumber" sortable />
-          <el-table-column fit label="聘用形式" prop="formOfEmployment" :formatter="formatEmployment" sortable />
+          <el-table-column fit label="聘用形式" prop="formOfEmployment" :formatter="formatEmployment" sortable>
+            <!-- <template slot-scope="{row}">
+              {{ EmployeeEnum.hireType.find(item => item.id === row.formatEmployment)? EmployeeEnum.hireType.find(item => item.id === row.formatEmployment).value : '未知' }}
+            </template> -->
+          </el-table-column>
           <el-table-column fit label="部门" prop="departmentName" sortable />
           <el-table-column fit label="入职时间" prop="timeOfEntry" sortable align="center">
             <template slot-scope="{row}">
@@ -45,12 +49,12 @@
             layout="prev, pager, next"
             :page-size="page.size"
             :current-page="page.page"
-            :total="page.total"
+            :total="total"
             @current-change="changePage"
           />
         </el-row>
       </el-card>
-      <AddEmployees :visible.sync="visible" @refresh="getEmployeeSimple" />
+      <AddEmployees :visible.sync="visible" @refresh="getEmployeeList" />
     </div>
   </div>
 </template>
@@ -65,32 +69,33 @@ export default {
     return {
       tableData: [],
       loading: false,
+      EmployeeEnum: EmployeeEnum,
       page: {
         page: 1,
-        size: 10,
-        total: 0 // 总数
+        size: 10
       },
+      total: 0, // 总数
       visible: false
     }
   },
   created() {
-    this.getEmployeeSimple()
+    this.getEmployeeList()
   },
   methods: {
     indexMethod(index) {
-      return index + 1
+      return (this.page.page - 1) * this.page.size + index + 1
     },
     changePage(newPage) {
       this.page.page = newPage
-      this.getEmployeeSimple()
+      this.getEmployeeList()
     },
     // 获取员工列表
-    async getEmployeeSimple() {
+    async getEmployeeList() {
       this.loading = true
       try {
         const { total, rows } = await getEmployeeList(this.page)
         this.tableData = rows
-        this.page.total = total
+        this.total = total
         this.loading = false
       } catch (error) {
         this.$message.error('数据获取失败')

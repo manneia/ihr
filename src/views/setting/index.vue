@@ -106,7 +106,7 @@ export default {
         // 刷新数据
         this.getRoleList()
       } catch (error) {
-        console.log('删除角色失败')
+        this.$message.error('删除角色失败')
       }
     },
     async handleEdit(row) {
