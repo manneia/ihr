@@ -64,6 +64,7 @@ export default {
           })
         })
       } else if (command === 'add') {
+        this.activeNode = {}
         // activeNode 父节点
         this.visible = true
       } else if (command === 'edit') {

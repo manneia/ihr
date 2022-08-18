@@ -140,3 +140,15 @@ export const toList = list => {
   })
   return newArr
 }
+
+export const toDoList = list => {
+  let newArr = []
+
+  list.forEach(item => {
+    newArr.push(item)
+    if (item.children?.length) {
+      newArr = newArr.concat(toList(item.children))
+    }
+  })
+  return newArr
+}

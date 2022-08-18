@@ -6,7 +6,8 @@ const getters = {
   userId: state => state.user.userInfo.userId,
   userInfo: state => state.user.userInfo,
   username: state => state.user.userInfo.username,
-  staffPhoto: state => state.user.userInfo.staffPhoto
+  staffPhoto: state => state.user.userInfo.staffPhoto,
+  name: state => state.user.userInfo.name
 }
 
 export default getters
